@@ -4,9 +4,19 @@ def main():
     full_text = get_book_text(book_path)
     word_count = get_word_count(full_text)
     final_character_count = get_character_count(full_text)
-    print(f"{final_character_count} each characters amount")
-    print(f"{word_count} is the word count")
+    sorted_character_count = get_sorted_character_count(final_character_count)
     
+    print(f"--- Begin report of {book_path} ---")
+    print(f"{word_count} words found in the document")
+    print()
+    
+    for item in sorted_character_count:
+        if not item["char"].isalpha():
+            continue
+        print(f"The '{item['char']}' character was found {item['num']} times")
+    
+    print("--- End report ---")
+
 def get_book_text(book_path):
     with open(book_path) as f:
         return f.read()
@@ -24,6 +34,15 @@ def get_character_count(full_text):
         else:
             character_count[character] = 1
     return character_count
-            
-            
+
+def sort_on(d):
+    return d["num"]
+
+def get_sorted_character_count(final_character_count):
+    sorted_list = []
+    for value in final_character_count:
+        sorted_list.append({"char": value, "num": final_character_count[value]})            
+    sorted_list.sort(reverse=True, key=sort_on)
+    return sorted_list
+
 main()
